@@ -1,0 +1,187 @@
+<center>
+<script src="http://blog.livedoor.jp/reona396/processing-1.4.1.n_hack.js"></script><script type="application/processing" data-processing-target="pjs2" >
+int pictures_val = 9;
+
+PImage[] pictures = new PImage[pictures_val];
+
+String[] title = {
+  "Stars", "Rose Curve", "Camouflage",
+  "Colorful Photo", "Random Paint", "Yagasuri",
+  "Polka Dots", "Game of Life","Fruits"
+};
+
+String[] id = {
+  "185038", "152475", "37191",
+  "80562", "71569", "183520",
+  "191680", "63786","202618"
+};
+
+String[] pict_id = {
+  "a/f/af832daa.png", "c/6/c6d7b988.png", "4/4/4419e974.png",
+  "c/a/cac64365.png", "c/b/cbbcec09.png", "0/8/0869b9fb.png",
+  "2/c/2c698dab.png", "0/f/0f652f2a.png","b/a/badc3b9d.png"
+};
+
+float alp_theta;
+int now_pict_num = 0;
+
+int margin;
+
+int arrowX_start;
+int arrowX_goal;
+int arrowY_start;
+int arrowY_goal;
+int arrow_margin;
+
+int pict_size;
+
+void setup() {
+  size(180, 180);
+  colorMode(HSB, 360, 100, 100);
+  background(0, 0, 95);
+
+  for (int i = 0; i < pictures_val; i++) {
+    //pictures[i] = loadImage("./pict" + nf(i, 2) + ".png");
+    pictures[i] = loadImage("http://livedoor.blogimg.jp/reona396/imgs/" + pict_id[i]);
+  }
+
+  imageMode(CENTER);
+  rectMode(CENTER);
+  textAlign(CENTER, CENTER);
+
+  pict_size = 150; //pictures[0].width;
+  margin = (width - pict_size)/2;
+
+  arrowX_start = margin + 5;
+  arrowX_goal = margin + 15;
+  arrowY_start = height/2 - 5;
+  arrowY_goal = height/2 + 5;
+
+  arrow_margin = 8;
+}
+
+
+void draw() {
+  //画像表示
+  showImage();
+
+  //画像上にオンマウスか判断
+  if (onPicture()) {
+    //タイトルパネル表示
+    showTitle();
+  } else {
+    //画像切り替え
+    switchImage();
+  }
+}
+
+void showImage() {
+  tint(360, 255*abs(sin(radians(alp_theta))));
+  image(pictures[now_pict_num], width/2, height/2);
+}
+
+boolean onPicture() {
+  if (mouseX > margin && mouseX < margin + pict_size
+    && mouseY > margin && mouseY < margin + pict_size) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+boolean onLeftArrow() {
+  if (mouseX > arrowX_start - arrow_margin && mouseX < arrowX_goal + arrow_margin
+    && mouseY > arrowY_start - arrow_margin && mouseY < arrowY_goal + arrow_margin) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+boolean onRightArrow() {
+  if (mouseX > width - arrowX_goal - arrow_margin && mouseX < width - arrowX_start + arrow_margin
+    && mouseY > arrowY_start - arrow_margin && mouseY < arrowY_goal + arrow_margin) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+void showTitle() {
+  //タイトル表示
+  noStroke();
+  fill(180, 150);
+  rect(width/2, height/2, pict_size, height/5);
+  fill(360);
+  text(title[now_pict_num], width/2, height/2);
+
+  //矢印の色変え - 左
+  strokeWeight(2);
+  if (onLeftArrow()) {
+    stroke(119, 100, 100);
+  } else {
+    stroke(360);
+  }
+  line(arrowX_start, height/2, arrowX_goal, arrowY_start);
+  line(arrowX_start, height/2, arrowX_goal, arrowY_goal);
+
+  //矢印の色変え - 右
+  if (onRightArrow()) {
+    stroke(119, 100, 100);
+  } else {
+    stroke(360);
+  }
+  line(width - arrowX_start, height/2, width - arrowX_goal, arrowY_start);
+  line(width - arrowX_start, height/2, width - arrowX_goal, arrowY_goal);
+}
+
+void switchImage() {
+  //画像切替効果
+  alp_theta += 2;
+
+  //次の画像へ
+  if (alp_theta > 360) {
+    alp_theta = 0;
+    now_pict_num++;
+    //画像が一巡したら最初の画像へ
+    if (now_pict_num > pictures.length - 1) {
+      now_pict_num = 0;
+    }
+  }
+}
+
+void mousePressed() {
+  //左矢印をクリック
+  if (onLeftArrow()) {
+    stroke(119, 100, 100);
+    if (mousePressed == true) {
+      now_pict_num--;
+      if (now_pict_num < 0) {
+        now_pict_num = pictures.length - 1;
+      }
+    }
+  }
+  //右矢印をクリック
+  else if (onRightArrow()) {
+    stroke(119, 100, 100);
+    if (mousePressed == true) {
+      now_pict_num++;
+      if (now_pict_num > pictures.length - 1) {
+        now_pict_num = 0;
+      }
+    }
+  }
+  //画像上にオンマウス
+  //リンクを開く
+  else if (onPicture()) {
+    link("https://suzuri.jp/reona396/" + id[now_pict_num] + "/smartphone-case/iphone6/white", "_new");
+  }
+  else{
+    //なにもしない><
+  }
+}
+
+</script>
+<canvas id="pjs2"/></canvas>
+<a href="http://blog.livedoor.jp/reona396/archives/55233600.html">このブログパーツについて</a>
+</center>
