@@ -8,18 +8,14 @@ var s = function(p) {
     var imageW, imageH;
     var alp;
     var nowImageIndex;
-    var margin;
     var leftButton, rightButton;
-    var itemBaseUrl;
-    var itemKindUrl;
+    var itemBaseUrl, itemKindUrl;
     var buttonFontSize;
-    var buttonW;
-    var buttonH;
+    var buttonW, buttonH;
     var itemFontSize;
 
     p.preload = function() {
         p.loadJSON("http://blog.livedoor.jp/reona396/slide_fullg/data.json", p.preloadImages);
-        // p.loadJSON("./data.json", p.preloadImages);
     }
 
     p.preloadImages = function(jsonData) {
@@ -31,7 +27,6 @@ var s = function(p) {
         // 画像のロード
         for (var i = 0; i < itemNum; i++) {
             images[i] = p.loadImage("http://blog.livedoor.jp/reona396/slide_fullg/image" + p.nf(i, 2) + ".png");
-            // images[i] = p.loadImage("images/image" + p.nf(i,2) + ".png");
         }
     }
 
@@ -51,16 +46,12 @@ var s = function(p) {
         imageH = imageW;
         canvas = p.createCanvas(imageW, imageH);
         canvas.position(0, canvasY);
-        canvas.parent("myP5");
 
         p.background(95);
 
         p.imageMode(p.CENTER);
         p.rectMode(p.CENTER);
         p.textAlign(p.CENTER, p.CENTER);
-
-        // 商品画像の周りの余白
-        margin = (p.width - imageW) / 2;
 
         leftButton = p.createButton("<");
         leftButton.mousePressed(function() {
@@ -74,7 +65,7 @@ var s = function(p) {
         leftButton.style("outline", "none");
         leftButton.parent("myP5");
         leftButton.hide();
-        leftButton.position(margin, canvasY + p.height / 2 - leftButton.height / 2);
+        leftButton.position(0, canvasY + p.height / 2 - leftButton.height / 2);
 
         rightButton = p.createButton(">");
         rightButton.mousePressed(function() {
@@ -88,7 +79,7 @@ var s = function(p) {
         rightButton.style("outline", "none");
         rightButton.parent("myP5");
         rightButton.hide();
-        rightButton.position(p.width - margin - rightButton.width, canvasY + p.height / 2 - leftButton.height / 2);
+        rightButton.position(p.width - rightButton.width, canvasY + p.height / 2 - leftButton.height / 2);
     }
 
     p.draw = function() {
@@ -131,8 +122,8 @@ var s = function(p) {
 
     p.isOnPicture = function() {
         // マウスが商品画像上にあればtrue
-        if (p.mouseX > margin && p.mouseX < p.width - margin &&
-            p.mouseY > margin && p.mouseY < p.height - margin) {
+        if (p.mouseX > 0 && p.mouseX < p.width &&
+            p.mouseY > 0 && p.mouseY < p.height) {
             return true;
         } else {
             return false;
